@@ -1,12 +1,12 @@
 import re
 
 
-class Cuit(object):
+class Cuil(object):
     # Codigo de verificacion
     VERIFICACION  = '5432765432'
 
-    def __init__(self, cuit):
-        self.cuit = cuit
+    def __init__(self, cuil):
+        self.cuil = cuil
         self.number = self.filter()
 
 
@@ -20,7 +20,7 @@ class Cuit(object):
         Caracteres válidos (\d-.\s)
         '''
         regex = r"^([\d\-\.\s]+)$"
-        matches = re.search(regex, self.cuit)
+        matches = re.search(regex, self.cuil)
         if matches:
                 return True
         return False
@@ -32,15 +32,15 @@ class Cuit(object):
         '''
         regex = r"[^\d]"
         subst = ""
-        result = re.sub(regex, subst, str(self.cuit), 0)
+        result = re.sub(regex, subst, str(self.cuil), 0)
         return result
 
 
     def __digito_verificador(self):
-        cuit = self.number
+        cuil = self.number
 
         v1 = 0
-        for i in range(10): v1 += int(self.VERIFICACION[i]) * int(cuit[i])
+        for i in range(10): v1 += int(self.VERIFICACION[i]) * int(cuil[i])
 
         # obtengo el resto
         v2 = v1 % 11
@@ -65,10 +65,10 @@ class Cuit(object):
     def get_messages(self):
         m = []
         if self.is_valid():
-            m.append('El código “{0}”, es válido.'.format(self.cuit))
+            m.append('El código “{0}”, es válido.'.format(self.cuil))
         else:
             m.append("""Introdujo: “{0}”, y éste no es un
-                        número de CUIT válido.""".format(self.cuit))
+                        número de CUIT válido.""".format(self.cuil))
 
         if not self.validate_valid_chars():
             m.append("""Solo puede introducir: números,
@@ -92,7 +92,7 @@ class Cuit(object):
 
 if __name__ == "__main__":
     n = input('Ingrese un número de CUIT: ')
-    o = Cuit(n)
+    o = Cuil(n)
 
     print('\n')
     for i in o.get_messages():
