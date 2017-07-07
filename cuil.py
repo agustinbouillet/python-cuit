@@ -1,5 +1,6 @@
 import re
 
+
 class Cuit(object):
     # Codigo de verificacion
     VERIFICACION  = '5432765432'
@@ -36,14 +37,6 @@ class Cuit(object):
 
 
     def __digito_verificador(self):
-        # Digitos verificadores, por cada uno debe multiplicarse los numeros del cuit
-        # respectivamente
-        # EJ.
-        # CUIT = 20258024428
-        #   2025802442
-        # x 5432765432
-        # ------------
-
         cuit = self.number
 
         v1 = 0
@@ -74,10 +67,12 @@ class Cuit(object):
         if self.is_valid():
             m.append('El código “{0}”, es válido.'.format(self.cuit))
         else:
-            m.append('Introdujo: “{0}”, y éste no es un número de CUIT válido.'.format(self.cuit))
+            m.append("""Introdujo: “{0}”, y éste no es un
+                        número de CUIT válido.""".format(self.cuit))
 
         if not self.validate_valid_chars():
-            m.append('Solo puede introducir: números, guiones medios, puntos o espacios.')
+            m.append("""Solo puede introducir: números,
+                        guiones medios, puntos o espacios.""")
 
         if not self.validate_digits():
             m.append('El CUIT debe tener 11 dígitos.')
