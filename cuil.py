@@ -1,13 +1,78 @@
 import re
+import ssl
+import json
+import urllib.request
+
 
 
 class Cuil(object):
+    provincias = {
+        '0':  'Ciudad Autónoma de Buenos Aires',
+        '1':  'Buenos Aires',
+        '2':  'Catamara',
+        '3':  'Córdoba',
+        '4':  'Corrientes',
+        '5':  'Entre Ríos',
+        '6':  'Jujuy',
+        '7':  'Mendoza',
+        '8':  'La Rioja',
+        '9':  'Salta',
+        '10':  'San Juan',
+        '11':  'San Luis',
+        '12':  'Santa Fe',
+        '13':  'Santiago del Estero',
+        '14':  'Tucumán',
+        '16':  'Chaco',
+        '17':  'Chubut',
+        '18':  'Formosa',
+        '19':  'Misiones',
+        '20':  'Neuquén',
+        '21':  'La Pampa',
+        '22':  'Río Negro',
+        '23':  'Santa Cruz',
+        '24':  'Tierra del Fuego'
+    }
+
     # Codigo de verificacion
     VERIFICACION  = '5432765432'
 
     def __init__(self, cuil):
         self.cuil = cuil
         self.number = self.filter()
+
+
+    def afip_cuil_validator(self):
+        """
+        Valida un CUIL contra AFIP
+        :param cuil: integer
+        :return: dict
+        """
+        cuil =self.cuil
+        data = {'success': True}
+
+        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        try:
+        	url = "https://soa.afip.gob.ar/sr-padron/v3/persona/{cuil}"
+        	response = urllib.request.urlopen(url.format(cuil=cuil),
+        	                                  context=gcontext)
+        except:
+        	response = None
+
+        if response:
+        	return json.loads(response.read().decode('utf-8'))
+
+
+        try:
+        	url = "https://aws.afip.gov.ar/sr-padron/v3/persona/{cuil}"
+        	response = urllib.request.urlopen(url.format(cuil=cuil),
+        	                                  context=gcontext)
+        except:
+        	response = None
+
+        if response:
+        	return json.loads(response.read().decode('utf-8'))
+
+        return data
 
 
     def validate_digits(self):
@@ -93,6 +158,11 @@ puntos o espacios.""")
 if __name__ == "__main__":
     n = input('Ingrese un número de CUIL: ')
     o = Cuil(n)
+
+    if o.is_valid():
+        data_afip = o.afip_cuil_validator()
+        print(data_afip)
+
 
     print('\n')
     for i in o.get_messages():
