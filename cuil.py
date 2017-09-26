@@ -67,12 +67,12 @@ class Cuil(object):
         if self.is_valid():
             m.append('El código “{0}”, es válido.'.format(self.cuil))
         else:
-            m.append("""Introdujo: “{0}”, y éste no es un
-                        número de CUIT válido.""".format(self.cuil))
+            m.append("""Introdujo: “{0}”, y éste no es un \
+número de CUIT válido.""".format(self.cuil))
 
         if not self.validate_valid_chars():
-            m.append("""Solo puede introducir: números,
-                        guiones medios, puntos o espacios.""")
+            m.append("""Solo puede introducir: números, guiones medios, \
+puntos o espacios.""")
 
         if not self.validate_digits():
             m.append('El CUIT debe tener 11 dígitos.')
