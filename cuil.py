@@ -2,7 +2,7 @@ import re
 import ssl
 import json
 import urllib.request
-
+from urllib.error import URLError
 
 
 class Cuil(object):
@@ -33,6 +33,9 @@ class Cuil(object):
         '24':  'Tierra del Fuego'
     }
 
+    WS_AFIP = "https://soa.afip.gob.ar/sr-padron/v3/persona/{cuil}"
+    WS_AMAZON = "https://aws.afip.gov.ar/sr-padron/v3/persona/{cuil}"
+
     # Codigo de verificacion
     VERIFICACION  = '5432765432'
 
@@ -41,38 +44,45 @@ class Cuil(object):
         self.number = self.filter()
 
 
+    def webservice_cuil_validator(self, cuil=None, service_uri=None):
+        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+
+        try:
+            url = service_uri.format(cuil=cuil)
+            return urllib.request.urlopen(url, context=gcontext)
+        except URLError as e:
+            print("No es posible obtener datos del webservice AFIP.")
+            if hasattr(e, 'reason'):
+                print("Error al intentar llegar al servidor.")
+                print("Motivo: ", e.reason)
+            elif hasattr(e, 'code'):
+                print("El servidor no pudo responder a la petición.")
+                print("Código de error: ", e.code)
+
+        return None
+
+
     def afip_cuil_validator(self):
         """
-        Valida un CUIL contra AFIP
-        :param cuil: integer
-        :return: dict
+        Valida un CUIL contra AFIP y amazon
         """
-        cuil =self.cuil
-        data = {'success': True}
+        # Validacion via AFIP
+        ws_1 = self.webservice_cuil_validator(self.cuil, self.WS_AFIP)
+        if ws_1:
+            try:
+                return json.loads(ws_1.read().decode('utf-8'))
+            except ValueError:
+                print("No se pudo acceder a los servicios de validación")
 
-        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-        try:
-        	url = "https://soa.afip.gob.ar/sr-padron/v3/persona/{cuil}"
-        	response = urllib.request.urlopen(url.format(cuil=cuil),
-        	                                  context=gcontext)
-        except:
-        	response = None
+        # Validacion via amazon
+        ws_2 = self.webservice_cuil_validator(self.cuil, self.WS_AMAZON)
+        if ws_2:
+            try:
+                return json.loads(ws_2.read().decode('utf-8'))
+            except ValueError:
+                print("No se pudo acceder a los servicios de validación")
 
-        if response:
-        	return json.loads(response.read().decode('utf-8'))
-
-
-        try:
-        	url = "https://aws.afip.gov.ar/sr-padron/v3/persona/{cuil}"
-        	response = urllib.request.urlopen(url.format(cuil=cuil),
-        	                                  context=gcontext)
-        except:
-        	response = None
-
-        if response:
-        	return json.loads(response.read().decode('utf-8'))
-
-        return data
+        return None
 
 
     def validate_digits(self):
