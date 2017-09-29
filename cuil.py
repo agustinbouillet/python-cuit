@@ -4,33 +4,35 @@ import json
 import urllib.request
 from urllib.error import URLError
 
+#  para obtener un cuil a partir del dni
+# https://aws.afip.gov.ar/sr-padron/v3/personas/24059752
 
 class Cuil(object):
     provincias = {
-        '0':  'Ciudad Autónoma de Buenos Aires',
-        '1':  'Buenos Aires',
-        '2':  'Catamara',
-        '3':  'Córdoba',
-        '4':  'Corrientes',
-        '5':  'Entre Ríos',
-        '6':  'Jujuy',
-        '7':  'Mendoza',
-        '8':  'La Rioja',
-        '9':  'Salta',
-        '10':  'San Juan',
-        '11':  'San Luis',
-        '12':  'Santa Fe',
-        '13':  'Santiago del Estero',
-        '14':  'Tucumán',
-        '16':  'Chaco',
-        '17':  'Chubut',
-        '18':  'Formosa',
-        '19':  'Misiones',
-        '20':  'Neuquén',
-        '21':  'La Pampa',
-        '22':  'Río Negro',
-        '23':  'Santa Cruz',
-        '24':  'Tierra del Fuego'
+        '0':'Ciudad Autónoma de Buenos Aires',
+        '1':'Buenos Aires',
+        '2':'Catamara',
+        '3':'Córdoba',
+        '4':'Corrientes',
+        '5':'Entre Ríos',
+        '6':'Jujuy',
+        '7':'Mendoza',
+        '8':'La Rioja',
+        '9':'Salta',
+        '10':'San Juan',
+        '11':'San Luis',
+        '12':'Santa Fe',
+        '13':'Santiago del Estero',
+        '14':'Tucumán',
+        '16':'Chaco',
+        '17':'Chubut',
+        '18':'Formosa',
+        '19':'Misiones',
+        '20':'Neuquén',
+        '21':'La Pampa',
+        '22':'Río Negro',
+        '23':'Santa Cruz',
+        '24':'Tierra del Fuego'
     }
 
     WS_AFIP = "https://soa.afip.gob.ar/sr-padron/v3/persona/{cuil}"
@@ -67,15 +69,16 @@ class Cuil(object):
         Valida un CUIL contra AFIP y amazon
         """
         # Validacion via AFIP
-        ws_1 = self.webservice_cuil_validator(self.cuil, self.WS_AFIP)
+        ws_1 = self.webservice_cuil_validator(self.number, self.WS_AFIP)
         if ws_1:
             try:
                 return json.loads(ws_1.read().decode('utf-8'))
             except ValueError:
                 print("No se pudo acceder a los servicios de validación")
 
+
         # Validacion via amazon
-        ws_2 = self.webservice_cuil_validator(self.cuil, self.WS_AMAZON)
+        ws_2 = self.webservice_cuil_validator(self.number, self.WS_AMAZON)
         if ws_2:
             try:
                 return json.loads(ws_2.read().decode('utf-8'))
