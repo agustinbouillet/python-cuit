@@ -134,7 +134,7 @@ class Cuil(object):
         # en todos los demas casos es el v3
         else:
             r = v3
-
+        print(r)
         if int(self.number[-1:]) == r:
             return True
         return False
