@@ -7,7 +7,7 @@ setup(
     packages = ['python-cuit'],
     author='Agustin Bouillet',
     author_email='agustin.bouillet@gmail.com',
-    url='http://www.bouillet.com.ar/',
+    url='https://github.com/agustinbouillet/python-cuit',
     description='Validador de CUIT',
     keywords = ['cuil', 'cuit', 'Argentina'],
 )
