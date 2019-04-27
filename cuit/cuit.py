@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Validador de CUIL/CUIT
 
 El Código Único de Identificación Tributaria (CUIT) es una clave que se

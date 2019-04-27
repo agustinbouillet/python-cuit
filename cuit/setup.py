@@ -2,7 +2,7 @@
 from distutils.core import setup
 
 setup(
-    name='Validador de CUIT',
+    name='cuit',
     version='0.1',
     packages = ['cuit'],
     author='Agustin Bouillet',
