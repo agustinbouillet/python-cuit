@@ -15,7 +15,7 @@ import re
 
 class Cuit:
   # Codigo de verificacion
-  VERIFICACION  = '5432765432'
+  VERIFICATION_CODE  = '5432765432'
   MESSAGES = {
       'valid'          : 'El código «{cuit}», es válido.',
       'invalid'        : ('Introdujo «{cuit}» y éste no es un número de CUIT '
@@ -39,18 +39,20 @@ class Cuit:
     '''Valida si la infomración pasada por parámetro es adecuada.
     Caracteres válidos (\d-.\s)
     '''
-    regex = r'^([\d\-\.\s]+)$'
-    matches = re.search(regex, self.cuit)
-    if matches:
-        return True
-    return False
-
+    try:
+      regex   = r'^([\d\-\.\s]+)$'
+      matches = re.search(regex, self.cuit)
+      if matches:
+          return True
+      return False
+    except:
+      return False
 
   def filter(self):
     '''Limpia el valor de cualquier caracter que no sea un número.
     '''
-    regex = r'[^\d]'
-    subst = ''
+    regex  = r'[^\d]'
+    subst  = ''
     result = re.sub(regex, subst, str(self.cuit), 0)
     return result
 
@@ -67,7 +69,7 @@ class Cuit:
     cuit = self.number
 
     v1 = 0
-    for i in range(10): v1 += int(self.VERIFICACION[i]) * int(cuit[i])
+    for i in range(10): v1 += int(self.VERIFICATION_CODE[i]) * int(cuit[i])
 
     # obtengo el resto
     v2 = v1 % 11
@@ -122,6 +124,6 @@ class Cuit:
 if __name__ == '__main__':
   n = input('Ingrese un número de CUIT: ')
   o = Cuit(n)
-  print(o.MESSAGES)
+  # print(o.MESSAGES)
   [print('—',i) for i in o.get_messages()]
   print('\n')
