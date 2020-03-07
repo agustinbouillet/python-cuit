@@ -13,6 +13,7 @@ https://es.wikipedia.org/wiki/Clave_%C3%9Anica_de_Identificaci%C3%B3n_Tributaria
 """
 import re
 
+
 class Cuit:
   # Codigo de verificacion
   VERIFICATION_CODE  = '5432765432'
@@ -48,6 +49,7 @@ class Cuit:
     except:
       return False
 
+
   def filter(self):
     '''Limpia el valor de cualquier caracter que no sea un número.
     '''
@@ -57,19 +59,21 @@ class Cuit:
     return result
 
 
-  def __digito_verificador(self):
-    # Digitos verificadores, por cada uno debe multiplicarse los numeros del cuit
-    # respectivamente
-    # EJ.
-    # CUIT = 20258024428
-    #   2025802442
-    # x 5432765432
-    # ------------
+  def digito_verificador(self):
+    """Calcula el dígito verificador.
 
+    Digitos verificadores, por cada uno debe multiplicarse los numeros
+    del cuit respectivamente.
+
+    Returns:
+      [int] -- Número verificador
+    """
     cuit = self.number
+    digito_verificador = None
 
     v1 = 0
-    for i in range(10): v1 += int(self.VERIFICATION_CODE[i]) * int(cuit[i])
+    for i in range(10):
+      v1 += int(self.VERIFICATION_CODE[i]) * int(cuit[i])
 
     # obtengo el resto
     v2 = v1 % 11
@@ -77,16 +81,27 @@ class Cuit:
     v3 = 11 - v2
     # si el ressultado de v3 es == 11. El valor es 0
     if v3 == 11:
-      r = 0
+      digito_verificador = 0
     # si v3 es igual a 10. El valor es 9
     elif v3 == 10:
       # return False
-      r = 9
+      digito_verificador = 9
     # en todos los demas casos es el v3
     else:
-      r = v3
+      digito_verificador = v3
 
-    if int(self.number[-1:]) == r:
+    return digito_verificador
+
+
+  def is_valid_digito_verificador(self):
+    """Valida que el número verificador coincida con el del número de
+    CUIL ingresado.
+
+    Returns:
+      bool
+    """
+    digito_verificador = self.digito_verificador()
+    if int(self.number[-1:]) == digito_verificador:
       return True
 
     return False
@@ -114,7 +129,7 @@ class Cuit:
     num = self.number
     if self.validate_valid_chars()\
         and self.validate_digits()\
-        and self.__digito_verificador():
+        and self.is_valid_digito_verificador():
       return True
 
     return False
@@ -124,6 +139,9 @@ class Cuit:
 if __name__ == '__main__':
   n = input('Ingrese un número de CUIT: ')
   o = Cuit(n)
+  print(o.digito_verificador())
+  print(o.is_valid_digito_verificador())
+
   # print(o.MESSAGES)
   [print('—',i) for i in o.get_messages()]
   print('\n')
