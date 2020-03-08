@@ -29,14 +29,14 @@ class Cuit:
 
   def __init__(self, cuit):
     self.cuit   = cuit
-    self.number = self.filter()
+    self.number = self.filter_chars()
 
 
   def validate_digits(self):
     return True if len(self.number) == 11 else False
 
 
-  def validate_valid_chars(self):
+  def validate_chars(self):
     '''Valida si la infomración pasada por parámetro es adecuada.
     Caracteres válidos (\d-.\s)
     '''
@@ -50,7 +50,7 @@ class Cuit:
       return False
 
 
-  def filter(self):
+  def filter_chars(self):
     '''Limpia el valor de cualquier caracter que no sea un número.
     '''
     regex  = r'[^\d]'
@@ -107,7 +107,7 @@ class Cuit:
     return False
 
 
-  def get_messages(self):
+  def messages(self):
     """Mensajes de validación.
     """
     mensajes = []
@@ -116,7 +116,7 @@ class Cuit:
     else:
       mensajes.append(self.MESSAGES.get('invalid').format(cuit=self.cuit))
 
-    if not self.validate_valid_chars():
+    if not self.validate_chars():
       mensajes.append(self.MESSAGES.get('invalid_chars'))
 
     if not self.validate_digits():
@@ -127,7 +127,7 @@ class Cuit:
 
   def is_valid(self):
     num = self.number
-    if self.validate_valid_chars()\
+    if self.validate_chars()\
         and self.validate_digits()\
         and self.is_valid_digito_verificador():
       return True
@@ -135,13 +135,19 @@ class Cuit:
     return False
 
 
+  def main(self):
+    n = input('Ingrese un número de CUIT: ')
+    o = Cuit(n)
+
+    # print(o.MESSAGES)
+    [print('—',i) for i in o.messages()]
+    print('\n')
+
 
 if __name__ == '__main__':
   n = input('Ingrese un número de CUIT: ')
   o = Cuit(n)
-  print(o.digito_verificador())
-  print(o.is_valid_digito_verificador())
 
   # print(o.MESSAGES)
-  [print('—',i) for i in o.get_messages()]
+  [print('—',i) for i in o.messages()]
   print('\n')
