@@ -11,6 +11,7 @@ o censo de las mismas, para efectos administrativos y tributarios.
 @See:
 https://es.wikipedia.org/wiki/Clave_%C3%9Anica_de_Identificaci%C3%B3n_Tributaria
 """
+import argparse
 import re
 
 
@@ -28,7 +29,7 @@ class Cuit:
 
 
   def __init__(self, cuit):
-    self.cuit   = cuit
+    self.cuit   = str(cuit)
     self.number = self.filter_chars()
 
 
@@ -53,9 +54,9 @@ class Cuit:
   def filter_chars(self):
     '''Limpia el valor de cualquier caracter que no sea un número.
     '''
-    regex  = r'[^\d]'
+    regex  = re.compile(r'[^\d]')
     subst  = ''
-    result = re.sub(regex, subst, str(self.cuit), 0)
+    result = re.sub(regex, subst, self.cuit, 0)
     return result
 
 
@@ -73,7 +74,7 @@ class Cuit:
 
     v1 = 0
     for i in range(10):
-      v1 += int(self.VERIFICATION_CODE[i]) * int(cuit[i])
+      v1 += int(Cuit.VERIFICATION_CODE[i]) * int(cuit[i])
 
     # obtengo el resto
     v2 = v1 % 11
@@ -135,19 +136,42 @@ class Cuit:
     return False
 
 
-  def main(self):
-    n = input('Ingrese un número de CUIT: ')
-    o = Cuit(n)
-
-    # print(o.MESSAGES)
-    [print('—',i) for i in o.messages()]
-    print('\n')
 
 
 if __name__ == '__main__':
-  n = input('Ingrese un número de CUIT: ')
-  o = Cuit(n)
 
-  # print(o.MESSAGES)
-  [print('—',i) for i in o.messages()]
-  print('\n')
+  parser = argparse.ArgumentParser(
+      description='Permite guardar un rango de fechas de conteo.')
+
+  parser.add_argument(
+      '-c',
+      '--cuit',
+      type=str,
+      help=('El número de CUIL solo puede contener números, guiones '
+            'medios, puntos o espacios.')
+  )
+  parser.add_argument(
+      '-m',
+      '--msg',
+      type=bool,
+      help='Muestra los mensajes.')
+  parser.add_argument(
+      '-d',
+      '--digito',
+      type=bool,
+      help=('Muestra el dígito verificador correspondiente al número de '
+           'CUIT ingresado.')
+  )
+
+  args = parser.parse_args()
+  c = Cuit(args.cuit)
+
+
+  if args.digito:
+    print(c.digito_verificador())
+
+  elif args.msg:
+    [print('—',i) for i in c.messages()]
+
+  else:
+    print(c.is_valid())
