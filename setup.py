@@ -9,6 +9,5 @@ setup(
     author_email='agustin.bouillet@gmail.com',
     url='https://github.com/agustinbouillet/python-cuit',
     description='Validador de Código Único de Identificación Titubaria (CUIT)',
-    keywords = ['cuil', 'cuit', 'Argentina', 'AFIP', 'ANSES'],
-    python_requires='>=3.4',
+    keywords = ['cuil', 'cuit', 'Argentina', 'AFIP', 'ANSES']
 )
