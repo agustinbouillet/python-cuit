@@ -74,6 +74,33 @@ Retorna una lista con los mensajes de éxito o error.
 
 ## Uso por línea de comando
 
+Argumentos `-c` o `--cuit`. Retorna una validación del tipo _boolean_.
+
+```bash
+$ python3 cuit.py -c=34-99903208-9
+True
+```
+
+Argumentos `-m` o `--msg`. Lista los mensajes de error o éxito.
+
+```bash
+$ python3 cuit.py -c=34-99903208-9 -m=true
+— El código «34-99903208-9», es válido.
+```
+
+```bash
+$ python3 cuit.py -c=34-99903208 -m=true
+— Introdujo «34-99903208» y éste no es un número de CUIT válido.
+— El CUIT debe tener 11 dígitos.
+```
+
+Argumentos `-d` o `--digito`. Retorna el número verificador que 
+corresponde para el código ingresado independientemente de cual lleve.
+
+```bash
+$ python3 cuit.py -c=34-99903208-9 -d=true
+9
+```
 
 
 
