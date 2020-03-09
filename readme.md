@@ -94,7 +94,7 @@ $ python3 cuit.py -c=34-99903208 -m=true
 — El CUIT debe tener 11 dígitos.
 ```
 
-Argumentos `-d` o `--digito`. Retorna el número verificador que 
+Argumentos `-d` o `--digit`. Retorna el número verificador que 
 corresponde para el código ingresado independientemente de cual lleve.
 
 ```bash

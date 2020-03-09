@@ -156,7 +156,7 @@ if __name__ == '__main__':
       help='Muestra los mensajes.')
   parser.add_argument(
       '-d',
-      '--digito',
+      '--digit',
       type=bool,
       help=('Muestra el dígito verificador correspondiente al número de '
            'CUIT ingresado.')
@@ -166,7 +166,7 @@ if __name__ == '__main__':
   c = Cuit(args.cuit)
 
 
-  if args.digito:
+  if args.digit:
     print(c.digito_verificador())
 
   elif args.msg:
