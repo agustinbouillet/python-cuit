@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='python-cuit',
-    version='1.0.0',
+    version='1.0.1',
     py_modules = ['cuit'],
     author='Agustin Bouillet',
     author_email='agustin.bouillet@gmail.com',

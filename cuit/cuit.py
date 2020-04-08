@@ -11,8 +11,8 @@ o censo de las mismas, para efectos administrativos y tributarios.
 @See:
 https://es.wikipedia.org/wiki/Clave_%C3%9Anica_de_Identificaci%C3%B3n_Tributaria
 """
-import argparse
 import re
+from argparse import ArgumentParser
 
 
 class Cuit:
@@ -20,11 +20,11 @@ class Cuit:
   VERIFICATION_CODE  = '5432765432'
   MESSAGES = {
       'valid'          : 'El código «{cuit}», es válido.',
-      'invalid'        : ('Introdujo «{cuit}» y éste no es un número de CUIT '
-                         'válido.'),
-      'invalid_chars'  : ('Solo puede introducir: números, guiones medios, '
-                         'puntos o espacios.'),
-      'invalid_length' : 'El CUIT debe tener 11 dígitos.'
+      'invalid'        : ('Introdujo «{cuit}» y éste no es un número de '
+                          'CUIT válido.'),
+      'invalid_chars'  : ('Solo puede introducir: números, guiones'
+                          'medios, puntos o espacios.'),
+      'invalid_length' : 'El número de CUIT debe tener 11 dígitos.'
   }
 
 
@@ -39,10 +39,10 @@ class Cuit:
 
   def validate_chars(self):
     '''Valida si la infomración pasada por parámetro es adecuada.
-    Caracteres válidos (\d-.\s)
+    Caracteres válidos (0-9-.\s)
     '''
     try:
-      regex   = r'^([\d\-\.\s]+)$'
+      regex   = re.compile(r'^([0-9\-\.\s]+)$')
       matches = re.search(regex, self.cuit)
       if matches:
           return True
@@ -54,7 +54,7 @@ class Cuit:
   def filter_chars(self):
     '''Limpia el valor de cualquier caracter que no sea un número.
     '''
-    regex  = re.compile(r'[^\d]')
+    regex  = re.compile(r'[^0-9]')
     subst  = ''
     result = re.sub(regex, subst, self.cuit, 0)
     return result
@@ -139,7 +139,7 @@ class Cuit:
 
 if __name__ == '__main__':
 
-  parser = argparse.ArgumentParser(
+  parser = ArgumentParser(
       description='Permite guardar un rango de fechas de conteo.')
 
   parser.add_argument(
@@ -152,25 +152,32 @@ if __name__ == '__main__':
   parser.add_argument(
       '-m',
       '--msg',
-      type=bool,
-      help='Muestra los mensajes.')
+      default=False,
+      action='store_true',
+      help='Muestra los mensajes.'
+  )
   parser.add_argument(
       '-d',
       '--digito',
-      type=bool,
+      action='store_true',
       help=('Muestra el dígito verificador correspondiente al número de '
-           'CUIT ingresado.')
+            'CUIT ingresado.')
   )
 
   args = parser.parse_args()
+
   c = Cuit(args.cuit)
 
+  if args.cuit:
+    print(c.is_valid())
 
-  if args.digito:
-    print(c.digito_verificador())
+    if args.digito:
+      print(c.digito_verificador())
 
-  elif args.msg:
-    [print('—',i) for i in c.messages()]
+    if args.msg:
+      [print('—',i) for i in c.messages()]
 
   else:
-    print(c.is_valid())
+    print('No se pasaron los argumentos necesarios para realizar '
+          'una validación.\nUse la opción «-h» o «--help» '
+          'para obtener ayuda.')
