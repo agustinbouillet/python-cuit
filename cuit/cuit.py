@@ -140,8 +140,8 @@ class Cuit:
 if __name__ == '__main__':
 
   parser = ArgumentParser(
-      description='Permite guardar un rango de fechas de conteo.')
-
+      description='Valida números de CUIT o CUIL de la República Argentina'
+  )
   parser.add_argument(
       '-c',
       '--cuit',
