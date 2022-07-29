@@ -1,0 +1,15 @@
+.DS_Store
+**/__pycache__/**
+/venv
+/dist
+/build
+/mode_icaro.egg-info
+/.pytest_cache
+/__pycache__
+__pycache__
+storage/*
+.env
+*.sqlite
+*.sqlite3
+start.sh
+enter.sh
